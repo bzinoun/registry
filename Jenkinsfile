@@ -48,10 +48,6 @@ node {
     stage('packaging') {
         sh "mvn package -Pprod -DskipTests"
     }
-    
-       stage('check docker') {
-       sh "docker ps"
-    }
         stage('docker build') {
         sh "sudo mvn package -Pprod docker:build"
     }
