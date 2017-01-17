@@ -14,7 +14,10 @@ node {
      def javaHome = tool'java8'		
      env.PATH = "${javaHome }/bin:${env.PATH}"
 
-    stage('check tools') {
+     def DOCKER_HOST="tcp://192.168.1.225:2375"
+        env.PATH = "${DOCKER_HOST}:${env.PATH}"
+
+   stage('check tools') {
         sh "node -v"
         sh "npm -v"
         sh "bower -v"
