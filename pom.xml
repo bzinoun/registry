@@ -329,6 +329,7 @@
                 <configuration>
                     <imageName>jhipster/jhipster-registry:dev</imageName>
                     <dockerDirectory>src/main/docker/dev</dockerDirectory>
+                    <dockerHost>tcp://192.168.1.225:2375</dockerHost>
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
