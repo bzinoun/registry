@@ -53,6 +53,6 @@ node {
        sh "docker ps"
     }
         stage('docker build') {
-        sh "mvn package -Pprod docker:build"
+        sh "sudo mvn package -Pprod docker:build"
     }
 }
