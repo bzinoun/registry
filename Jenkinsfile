@@ -48,7 +48,24 @@ node {
     stage('packaging') {
         sh "mvn package -Pprod -DskipTests"
     }
-        stage('docker build') {
-        sh "mvn package -Pprod docker:build"
+        stage('docker') {
+        
+ node("docker") {
+    docker.withRegistry('localhost:5000') {
+    
+        git url: "https://github.com/bzinoun/registry.git"
+        sh "git rev-parse HEAD > .git/commit-id"
+        def commit_id = readFile('.git/commit-id').trim()
+        println commit_id
+    //rm file commit-id
+        stage "docker build"
+        def app = docker.build("registry:${commit_id}", '.')
+        
+    
+        stage "docker publish"
+        app.push 'master'
+        app.push "${commit_id}"
+    }
+}
     }
 }
