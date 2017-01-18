@@ -14,9 +14,6 @@ node {
      def javaHome = tool'java8'		
      env.PATH = "${javaHome }/bin:${env.PATH}"
 
-     def DOCKER_HOST="tcp://192.168.1.225:2375"
-        env.PATH = "${DOCKER_HOST}:${env.PATH}"
-
    stage('check tools') {
         sh "node -v"
         sh "npm -v"
@@ -48,9 +45,8 @@ node {
     stage('packaging') {
         sh "mvn package -Pprod -DskipTests"
     }
-        stage('docker') {
+    stage('docker') {
         
-
     docker.withRegistry('localhost:5000') {
     
         git url: "https://github.com/bzinoun/registry.git"
@@ -62,7 +58,7 @@ node {
         def app = docker.build("registry:${commit_id}", '.')
         
     
-        stage "docker publish"
+   stage "docker publish"
         app.push 'master'
         app.push "${commit_id}"
     }
