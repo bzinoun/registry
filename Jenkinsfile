@@ -48,16 +48,21 @@ node {
     stage('docker') {
         
     docker.withRegistry('localhost:5000') {
-    
-        git url: "https://github.com/bzinoun/registry.git"
+   
+ docker.image('maven:3.3.3-jdk-8').inside {
+  git url: "https://github.com/bzinoun/registry.git"
+  sh 'mvn  clean install'
+}
+        
+       /* git url: "https://github.com/bzinoun/registry.git"
         sh "git rev-parse HEAD > .git/commit-id"
         def commit_id = readFile('.git/commit-id').trim()
         println commit_id
     //rm file commit-id
         stage "docker build"
-        def app = docker.build("registry:${commit_id}", '.')
+       */
         
-    
+     def app = docker.build("registry:${commit_id}", '.')
    stage "docker publish"
         app.push 'master'
         app.push "${commit_id}"
