@@ -50,7 +50,7 @@ node {
     }
         stage('docker') {
         
- node("docker") {
+
     docker.withRegistry('localhost:5000') {
     
         git url: "https://github.com/bzinoun/registry.git"
@@ -66,6 +66,5 @@ node {
         app.push 'master'
         app.push "${commit_id}"
     }
-}
     }
 }
