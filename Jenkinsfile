@@ -47,7 +47,7 @@ node {
     }
     stage('docker') {
         
-    docker.withRegistry('localhost:5000') {
+    docker.withRegistry('192.168.1.225:5000') {
    
  docker.image('maven:3.3.3-jdk-8').inside {
   git url: "https://github.com/bzinoun/registry.git"
