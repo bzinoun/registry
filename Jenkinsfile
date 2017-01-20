@@ -4,7 +4,6 @@ node {
         checkout scm
     }
 
-    // uncomment these 2 lines and edit the name 'node-4.6.0' according to what you choose in configuration
      def nodeHome = tool name: 'node-7.4.0-gulp', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
      env.PATH = "${nodeHome}/bin:${env.PATH}"
     
@@ -27,45 +26,29 @@ node {
         sh "npm install"
     }
 
-    stage('clean') {
+    stage('clean install') {
         sh "mvn clean"
     }
 
-    /*stage('backend tests') {
-        try {
-            sh "mvn test"
-        } catch(err) {
-            throw err
-        } finally {
-            step([$class: 'JUnitResultArchiver', testResults: '(*)(*)/target/surefire-reports/TEST-*.xml'])// replace (*) ->*
-        }
-    }*/
 
-
-    stage('packaging') {
-        sh "mvn package -Pprod -DskipTests"
-    }
     stage('docker') {
         
-    docker.withRegistry('http://localhost:5000') {
+    //docker.withRegistry('http://localhost:5000') {
    
  docker.image('maven:3.3.3-jdk-8').inside {
-  git url: "https://github.com/bzinoun/registry.git"
-  sh 'mvn  clean install'
+	git url: "https://github.com/bzinoun/registry.git"
+	sh 'mvn  clean install'
 }
         
-       /* git url: "https://github.com/bzinoun/registry.git"
+        git url: "https://github.com/bzinoun/registry.git"
         sh "git rev-parse HEAD > .git/commit-id"
         def commit_id = readFile('.git/commit-id').trim()
         println commit_id
     //rm file commit-id
         stage "docker build"
-       */
-        
-     def app = docker.build("registry:${commit_id}", '.')
-   stage "docker publish"
-        app.push 'master'
-        app.push "${commit_id}"
+       
+   def image = docker.build("registry:${commit_id}", '.')
+   def container = image.run('-P')
     }
     }
-}
+
