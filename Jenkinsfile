@@ -33,8 +33,8 @@ node {
 
     stage('docker') {
         
-    //docker.withRegistry('http://localhost:5000') {
-   
+withDockerRegistry([url: 'http://localhost:5000']) {   
+    
  docker.image('maven:3.3.3-jdk-8').inside {
 	git url: "https://github.com/bzinoun/registry.git"
 	sh 'mvn  clean install'
@@ -51,4 +51,5 @@ node {
    def container = image.run('-P')
     }
     }
+}
 
